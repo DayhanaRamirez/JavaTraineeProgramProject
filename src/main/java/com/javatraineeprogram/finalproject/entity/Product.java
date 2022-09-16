@@ -20,7 +20,7 @@ public class Product implements Serializable {
     @Column(name = "product_id")
     private Integer id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     @NotBlank(message = "First name is required")
     private String name;
 

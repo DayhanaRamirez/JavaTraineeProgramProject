@@ -30,8 +30,4 @@ public class Address implements Serializable {
     @Column(name = "state")
     @NotBlank(message = "State name is required")
     private String state;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
-    private Customer customer;
 }

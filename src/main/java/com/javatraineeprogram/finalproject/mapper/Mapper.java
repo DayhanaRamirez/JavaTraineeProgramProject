@@ -2,6 +2,8 @@ package com.javatraineeprogram.finalproject.mapper;
 
 import com.javatraineeprogram.finalproject.dto.CustomerDto;
 import com.javatraineeprogram.finalproject.entity.Customer;
+import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Bean;
 
 public class Mapper {
 
@@ -24,4 +26,10 @@ public class Mapper {
                 .paymentMethods(customer.getPaymentMethods())
                 .build();
     }
+
+    @Bean
+    public ModelMapper modelMapper(){
+        return new ModelMapper();
+    }
+
 }

@@ -26,8 +26,4 @@ public class PaymentMethod implements Serializable {
     @Column(name = "number")
     @NotBlank(message = "Number is required")
     private String number;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
-    private Customer customer;
 }
