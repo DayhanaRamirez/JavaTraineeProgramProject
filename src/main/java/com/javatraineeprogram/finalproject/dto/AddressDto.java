@@ -13,14 +13,16 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductDto implements Serializable {
+public class AddressDto implements Serializable {
 
-    @NotBlank(message = "First name is required")
-    private String name;
+    @NotBlank(message = "Street is required")
+    private String street;
 
-    @NotBlank(message = "Description name is required")
-    private String description;
+    @NotBlank(message = "City is required")
+    private String city;
 
-    @NotNull(message = "Price is required")
-    private Double price;
+    @NotBlank(message = "State name is required")
+    private String state;
+
+    private int customerId;
 }

@@ -1,5 +1,6 @@
 package com.javatraineeprogram.finalproject.dto;
 
+import com.javatraineeprogram.finalproject.entity.Customer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,14 +14,13 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductDto implements Serializable {
+public class PaymentMethodDto implements Serializable {
 
-    @NotBlank(message = "First name is required")
-    private String name;
+    @NotBlank(message = "Type is required")
+    private String type;
 
-    @NotBlank(message = "Description name is required")
-    private String description;
+    @NotBlank(message = "Number is required")
+    private String number;
 
-    @NotNull(message = "Price is required")
-    private Double price;
+    private Customer customer;
 }

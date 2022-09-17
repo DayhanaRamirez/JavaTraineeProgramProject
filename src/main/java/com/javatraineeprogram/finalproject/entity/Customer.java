@@ -34,11 +34,23 @@ public class Customer implements Serializable {
     @NotBlank(message = "Email is required")
     private String email;
 
-    @OneToMany(cascade = CascadeType.ALL, targetEntity = Address.class)
-    @JoinColumn(name = "fk_customerId", referencedColumnName = "customer_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
     private List<Address> addresses;
 
-    @OneToMany(cascade = CascadeType.ALL, targetEntity = PaymentMethod.class)
-    @JoinColumn(name = "fk_customerId", referencedColumnName = "customer_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
     private List<PaymentMethod> paymentMethods;
+
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
+        for (Address address : addresses) {
+            address.setCustomer(this);
+        }
+    }
+
+    public void setPaymentMethods(List<PaymentMethod> paymentMethods) {
+        this.paymentMethods = paymentMethods;
+        for (PaymentMethod paymentMethod : paymentMethods) {
+            paymentMethod.setCustomer(this);
+        }
+    }
 }

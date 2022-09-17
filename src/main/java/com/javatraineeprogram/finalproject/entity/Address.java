@@ -1,5 +1,6 @@
 package com.javatraineeprogram.finalproject.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,4 +31,9 @@ public class Address implements Serializable {
     @Column(name = "state")
     @NotBlank(message = "State name is required")
     private String state;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private Customer customer;
 }

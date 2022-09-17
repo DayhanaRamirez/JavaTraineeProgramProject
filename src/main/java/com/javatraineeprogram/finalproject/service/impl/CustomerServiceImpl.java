@@ -5,7 +5,7 @@ import com.javatraineeprogram.finalproject.dto.NoEmailCustomerDto;
 import com.javatraineeprogram.finalproject.entity.Customer;
 import com.javatraineeprogram.finalproject.exception.CreateUserEmailException;
 import com.javatraineeprogram.finalproject.exception.NotFoundException;
-import com.javatraineeprogram.finalproject.mapper.Mapper;
+import com.javatraineeprogram.finalproject.mapper.MyMapper;
 import com.javatraineeprogram.finalproject.repository.CustomerRepository;
 import com.javatraineeprogram.finalproject.service.CustomerService;
 import lombok.AllArgsConstructor;
@@ -21,19 +21,21 @@ public class CustomerServiceImpl implements CustomerService {
 
     private CustomerRepository customerRepository;
 
+    private MyMapper myMapper;
+
     @Override
     public Customer saveCustomer(CustomerDto customerDto) throws CreateUserEmailException {
         if (customerRepository.findCustomerByEmail(customerDto.getEmail()) != null) {
             throw new CreateUserEmailException("A customer already exists with the given email");
         }
-        return customerRepository.save(Mapper.customerDtoToCustomerEntity(customerDto));
+        return customerRepository.save(myMapper.customerDtoToCustomerEntity(customerDto));
     }
 
     @Override
     public CustomerDto getCustomerById(int id) throws NotFoundException {
 
         try {
-            return Mapper.customerEntityToCustomerDto(customerRepository.getReferenceById(id));
+            return myMapper.customerEntityToCustomerDto(customerRepository.getReferenceById(id));
         } catch (EntityNotFoundException e) {
             throw new NotFoundException("Couldn't find a customer with the given id");
         }
@@ -42,11 +44,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<CustomerDto> getAllCustomers() {
         List<Customer> customers = customerRepository.findAll();
-        List<CustomerDto> customerDtos = new ArrayList<>();
+        List<CustomerDto> customerDtoList = new ArrayList<>();
         for (Customer customer : customers) {
-            customerDtos.add(Mapper.customerEntityToCustomerDto(customer));
+            customerDtoList.add(myMapper.customerEntityToCustomerDto(customer));
         }
-        return customerDtos;
+        return customerDtoList;
     }
 
     @Override

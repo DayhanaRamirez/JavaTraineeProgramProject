@@ -1,4 +1,4 @@
-package com.javatraineeprogram.finalproject.controller.customer;
+package com.javatraineeprogram.finalproject.controller;
 
 import com.javatraineeprogram.finalproject.dto.CustomerDto;
 import com.javatraineeprogram.finalproject.dto.NoEmailCustomerDto;

@@ -15,8 +15,7 @@ public interface ProductService {
 
     List<ProductDto> getAllProducts();
 
-    Product updateProduct(ProductDto productDto) throws NotFoundException;
+    Product updateProduct(ProductDto productDto, int id) throws NotFoundException;
 
     void deleteProductById(int id) throws NotFoundException;
-
 }

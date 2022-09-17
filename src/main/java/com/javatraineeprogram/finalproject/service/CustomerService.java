@@ -6,7 +6,6 @@ import com.javatraineeprogram.finalproject.entity.Customer;
 import com.javatraineeprogram.finalproject.exception.CreateUserEmailException;
 import com.javatraineeprogram.finalproject.exception.NotFoundException;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 public interface CustomerService {
