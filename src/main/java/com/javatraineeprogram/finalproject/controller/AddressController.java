@@ -1,6 +1,7 @@
 package com.javatraineeprogram.finalproject.controller;
 
 import com.javatraineeprogram.finalproject.dto.AddressDto;
+import com.javatraineeprogram.finalproject.dto.AddressDtoForReturn;
 import com.javatraineeprogram.finalproject.exception.NotFoundException;
 import com.javatraineeprogram.finalproject.service.AddressService;
 import lombok.AllArgsConstructor;
@@ -21,12 +22,12 @@ public class AddressController {
     private AddressService addressService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<AddressDto> getAddressById(@PathVariable("id") int id) throws NotFoundException {
+    public ResponseEntity<AddressDtoForReturn> getAddressById(@PathVariable("id") int id) throws NotFoundException {
         return new ResponseEntity<>(addressService.getAddressById(id), HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<AddressDto>> getAddresses() {
+    public ResponseEntity<List<AddressDtoForReturn>> getAddresses() {
         return new ResponseEntity<>(addressService.getAAllAddresses(), HttpStatus.OK);
     }
 

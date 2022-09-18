@@ -1,7 +1,5 @@
 package com.javatraineeprogram.finalproject.dto;
 
-import com.javatraineeprogram.finalproject.entity.Address;
-import com.javatraineeprogram.finalproject.entity.PaymentMethod;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,7 +26,7 @@ public class CustomerDto implements Serializable {
     @NotBlank(message = "Email is required")
     private String email;
 
-    private List<Address> addresses;
+    private List<AddressDto> addressDtoList;
 
-    private List<PaymentMethod> paymentMethods;
+    private List<PaymentMethodDto> paymentMethodDtoList;
 }

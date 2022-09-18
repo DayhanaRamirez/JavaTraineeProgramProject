@@ -1,6 +1,7 @@
 package com.javatraineeprogram.finalproject.controller;
 
 import com.javatraineeprogram.finalproject.dto.CustomerDto;
+import com.javatraineeprogram.finalproject.dto.CustomerDtoForReturn;
 import com.javatraineeprogram.finalproject.dto.NoEmailCustomerDto;
 import com.javatraineeprogram.finalproject.exception.CreateUserEmailException;
 import com.javatraineeprogram.finalproject.exception.NotFoundException;
@@ -23,12 +24,12 @@ public class CustomerController {
     private CustomerService customerService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerDto> getCustomerById(@PathVariable("id") int id) throws NotFoundException {
+    public ResponseEntity<CustomerDtoForReturn> getCustomerById(@PathVariable("id") int id) throws NotFoundException {
         return new ResponseEntity<>(customerService.getCustomerById(id), HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<CustomerDto>> getCustomers() {
+    public ResponseEntity<List<CustomerDtoForReturn>> getCustomers() {
         return new ResponseEntity<>(customerService.getAllCustomers(), HttpStatus.OK);
     }
 

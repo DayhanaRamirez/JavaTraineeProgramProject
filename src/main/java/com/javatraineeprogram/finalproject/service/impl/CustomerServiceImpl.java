@@ -1,12 +1,17 @@
 package com.javatraineeprogram.finalproject.service.impl;
 
-import com.javatraineeprogram.finalproject.dto.CustomerDto;
-import com.javatraineeprogram.finalproject.dto.NoEmailCustomerDto;
+import com.javatraineeprogram.finalproject.dto.*;
+import com.javatraineeprogram.finalproject.entity.Address;
 import com.javatraineeprogram.finalproject.entity.Customer;
+import com.javatraineeprogram.finalproject.entity.PaymentMethod;
 import com.javatraineeprogram.finalproject.exception.CreateUserEmailException;
 import com.javatraineeprogram.finalproject.exception.NotFoundException;
-import com.javatraineeprogram.finalproject.mapper.MyMapper;
+import com.javatraineeprogram.finalproject.mapper.AddressMapper;
+import com.javatraineeprogram.finalproject.mapper.CustomerMapper;
+import com.javatraineeprogram.finalproject.mapper.PaymentMethodMapper;
+import com.javatraineeprogram.finalproject.repository.AddressRepository;
 import com.javatraineeprogram.finalproject.repository.CustomerRepository;
+import com.javatraineeprogram.finalproject.repository.PaymentMethodRepository;
 import com.javatraineeprogram.finalproject.service.CustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,35 +25,39 @@ import java.util.List;
 public class CustomerServiceImpl implements CustomerService {
 
     private CustomerRepository customerRepository;
-
-    private MyMapper myMapper;
+    private AddressRepository addressRepository;
+    private PaymentMethodRepository paymentMethodRepository;
+    private CustomerMapper customerMapper;
+    private AddressMapper addressMapper;
+    private PaymentMethodMapper paymentMethodMapper;
 
     @Override
     public Customer saveCustomer(CustomerDto customerDto) throws CreateUserEmailException {
         if (customerRepository.findCustomerByEmail(customerDto.getEmail()) != null) {
             throw new CreateUserEmailException("A customer already exists with the given email");
         }
-        return customerRepository.save(myMapper.customerDtoToCustomerEntity(customerDto));
+
+        return customerRepository.save(saveWithEmail(customerDto));
     }
 
     @Override
-    public CustomerDto getCustomerById(int id) throws NotFoundException {
-
+    public CustomerDtoForReturn getCustomerById(int id) throws NotFoundException {
         try {
-            return myMapper.customerEntityToCustomerDto(customerRepository.getReferenceById(id));
+            Customer customer = customerRepository.getReferenceById(id);
+            return convert(customer);
         } catch (EntityNotFoundException e) {
             throw new NotFoundException("Couldn't find a customer with the given id");
         }
     }
 
     @Override
-    public List<CustomerDto> getAllCustomers() {
+    public List<CustomerDtoForReturn> getAllCustomers() {
         List<Customer> customers = customerRepository.findAll();
-        List<CustomerDto> customerDtoList = new ArrayList<>();
+        List<CustomerDtoForReturn> customerDtoForReturnList = new ArrayList<>();
         for (Customer customer : customers) {
-            customerDtoList.add(myMapper.customerEntityToCustomerDto(customer));
+            customerDtoForReturnList.add(convert(customer));
         }
-        return customerDtoList;
+        return customerDtoForReturnList;
     }
 
     @Override
@@ -57,8 +66,6 @@ public class CustomerServiceImpl implements CustomerService {
             Customer customer = customerRepository.getReferenceById(id);
             customer.setFirstName(noEmailCustomerDto.getFirstName());
             customer.setLastName(noEmailCustomerDto.getLastName());
-            customer.setAddresses(noEmailCustomerDto.getAddresses());
-            customer.setPaymentMethods(noEmailCustomerDto.getPaymentMethods());
             return customerRepository.save(customer);
         } catch (EntityNotFoundException e) {
             throw new NotFoundException("Couldn't find a customer with the given id");
@@ -72,5 +79,47 @@ public class CustomerServiceImpl implements CustomerService {
         } catch (Exception e) {
             throw new NotFoundException("Couldn't find a customer with the given id");
         }
+    }
+
+    private CustomerDtoForReturn convert(Customer customer) {
+        CustomerDtoForReturn customerDtoForReturn = customerMapper.customerEntityToCustomerDto(customer);
+
+        if (!customer.getAddresses().isEmpty()) {
+            for (Address address : customer.getAddresses()) {
+                AddressDtoForReturn addressDtoForReturn = addressMapper.addressEntityToAddressDto(address);
+                customerDtoForReturn.getAddressDtoForReturnList().add(addressDtoForReturn);
+            }
+        }
+
+        if (!customer.getPaymentMethods().isEmpty()) {
+            for (PaymentMethod paymentMethod : customer.getPaymentMethods()) {
+                PaymentMethodDtoForReturn paymentMethodDtoForReturn = paymentMethodMapper.paymentMethodEntityToPaymentMethodDto(paymentMethod);
+                customerDtoForReturn.getPaymentMethodDtoForReturnList().add(paymentMethodDtoForReturn);
+            }
+        }
+
+        return customerDtoForReturn;
+    }
+
+    private Customer saveWithEmail(CustomerDto customerDto) {
+        Customer customer = customerMapper.customerDtoToCustomerEntity(customerDto);
+
+        if (!customerDto.getAddressDtoList().isEmpty()) {
+            for (AddressDto addressDto : customerDto.getAddressDtoList()) {
+                Address address = addressMapper.addressDtoToAddressEntity(addressDto);
+                address.setCustomer(customer);
+                customer.getAddresses().add(address);
+            }
+        }
+
+        if (!customerDto.getPaymentMethodDtoList().isEmpty()) {
+            for (PaymentMethodDto paymentMethodDto : customerDto.getPaymentMethodDtoList()) {
+                PaymentMethod paymentMethod = paymentMethodMapper.paymentMethodDtoToPaymentMethodEntity(paymentMethodDto);
+                paymentMethod.setCustomer(customer);
+                customer.getPaymentMethods().add(paymentMethod);
+            }
+        }
+
+        return customer;
     }
 }

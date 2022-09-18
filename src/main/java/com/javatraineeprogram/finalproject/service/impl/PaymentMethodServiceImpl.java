@@ -1,9 +1,12 @@
 package com.javatraineeprogram.finalproject.service.impl;
 
 import com.javatraineeprogram.finalproject.dto.PaymentMethodDto;
+import com.javatraineeprogram.finalproject.dto.PaymentMethodDtoForReturn;
+import com.javatraineeprogram.finalproject.entity.Customer;
 import com.javatraineeprogram.finalproject.entity.PaymentMethod;
 import com.javatraineeprogram.finalproject.exception.NotFoundException;
-import com.javatraineeprogram.finalproject.mapper.MyMapper;
+import com.javatraineeprogram.finalproject.mapper.PaymentMethodMapper;
+import com.javatraineeprogram.finalproject.repository.CustomerRepository;
 import com.javatraineeprogram.finalproject.repository.PaymentMethodRepository;
 import com.javatraineeprogram.finalproject.service.PaymentMethodService;
 import lombok.AllArgsConstructor;
@@ -18,31 +21,39 @@ import java.util.List;
 public class PaymentMethodServiceImpl implements PaymentMethodService {
 
     private PaymentMethodRepository paymentMethodRepository;
-
-    private MyMapper myMapper;
+    private PaymentMethodMapper paymentMethodMapper;
+    private CustomerRepository customerRepository;
 
     @Override
-    public PaymentMethod savePaymentMethod(PaymentMethodDto paymentMethodDto) {
-        return paymentMethodRepository.save(myMapper.paymentMethodDtoToPaymentMethodEntity(paymentMethodDto));
+    public PaymentMethod savePaymentMethod(PaymentMethodDto paymentMethodDto) throws NotFoundException {
+        try {
+            PaymentMethod paymentMethod = paymentMethodMapper.paymentMethodDtoToPaymentMethodEntity(paymentMethodDto);
+            Customer customer = customerRepository.getReferenceById(paymentMethodDto.getCustomerId());
+            paymentMethod.setCustomer(customer);
+            return paymentMethodRepository.save(paymentMethod);
+        } catch (Exception e) {
+            throw new NotFoundException("Couldn't find a customer with the given id");
+        }
+
     }
 
     @Override
-    public PaymentMethodDto getPaymentMethodDtoById(int id) throws NotFoundException {
+    public PaymentMethodDtoForReturn getPaymentMethodDtoById(int id) throws NotFoundException {
         try {
-            return myMapper.paymentMethodEntityToPaymentMethodDto(paymentMethodRepository.getReferenceById(id));
+            return paymentMethodMapper.paymentMethodEntityToPaymentMethodDto(paymentMethodRepository.getReferenceById(id));
         } catch (EntityNotFoundException e) {
             throw new NotFoundException("Couldn't find a payment method with the given id");
         }
     }
 
     @Override
-    public List<PaymentMethodDto> getAllPaymentMethods() {
+    public List<PaymentMethodDtoForReturn> getAllPaymentMethods() {
         List<PaymentMethod> paymentMethods = paymentMethodRepository.findAll();
-        List<PaymentMethodDto> paymentMethodDtoList = new ArrayList<>();
+        List<PaymentMethodDtoForReturn> paymentMethodDtoForReturnList = new ArrayList<>();
         for (PaymentMethod paymentMethod : paymentMethods) {
-            paymentMethodDtoList.add(myMapper.paymentMethodEntityToPaymentMethodDto(paymentMethod));
+            paymentMethodDtoForReturnList.add(paymentMethodMapper.paymentMethodEntityToPaymentMethodDto(paymentMethod));
         }
-        return paymentMethodDtoList;
+        return paymentMethodDtoForReturnList;
     }
 
     @Override
@@ -51,7 +62,6 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
             PaymentMethod paymentMethod = paymentMethodRepository.getReferenceById(id);
             paymentMethod.setType(paymentMethodDto.getType());
             paymentMethod.setNumber(paymentMethodDto.getNumber());
-            paymentMethod.setCustomer(paymentMethodDto.getCustomer());
             return paymentMethodRepository.save(paymentMethod);
         } catch (EntityNotFoundException e) {
             throw new NotFoundException("Couldn't find a payment method with the given id");

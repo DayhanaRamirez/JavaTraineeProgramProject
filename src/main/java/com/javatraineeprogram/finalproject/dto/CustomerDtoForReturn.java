@@ -5,18 +5,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class NoEmailCustomerDto implements Serializable {
-
-    @NotBlank(message = "First name is required")
+public class CustomerDtoForReturn implements Serializable {
+    private Integer id;
     private String firstName;
-
-    @NotBlank(message = "Last name is required")
     private String lastName;
+    private String email;
+    private List<AddressDtoForReturn> addressDtoForReturnList;
+    private List<PaymentMethodDtoForReturn> paymentMethodDtoForReturnList;
 }

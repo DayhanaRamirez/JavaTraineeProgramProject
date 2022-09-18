@@ -5,26 +5,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AddressDto implements Serializable {
-
-    @NotBlank(message = "Street is required")
+public class AddressDtoForReturn implements Serializable {
+    private Integer id;
     private String street;
-
-    @NotBlank(message = "City is required")
     private String city;
-
-    @NotBlank(message = "State name is required")
     private String state;
-
-    @NotBlank(message = "Country name is required")
     private String country;
-
-    private int customerId;
+    private Integer customerId;
 }

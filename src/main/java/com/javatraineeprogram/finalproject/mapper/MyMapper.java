@@ -20,8 +20,6 @@ public class MyMapper {
                 .firstName(customerDto.getFirstName())
                 .lastName(customerDto.getLastName())
                 .email(customerDto.getEmail())
-                .addresses(customerDto.getAddresses())
-                .paymentMethods(customerDto.getPaymentMethods())
                 .build();
     }
 
@@ -30,8 +28,6 @@ public class MyMapper {
                 .firstName(customer.getFirstName())
                 .lastName(customer.getLastName())
                 .email(customer.getEmail())
-                .addresses(customer.getAddresses())
-                .paymentMethods(customer.getPaymentMethods())
                 .build();
     }
 
@@ -51,37 +47,33 @@ public class MyMapper {
                 .build();
     }
 
-    public Address addressDtoToAddressEntity(AddressDto addressDto){
+    public Address addressDtoToAddressEntity(AddressDto addressDto) {
         return Address.builder()
                 .street(addressDto.getStreet())
                 .city(addressDto.getCity())
                 .state(addressDto.getState())
-                .customer(addressDto.getCustomer())
                 .build();
     }
 
-    public AddressDto addressEntityToAddressDto(Address address){
+    public AddressDto addressEntityToAddressDto(Address address) {
         return AddressDto.builder()
                 .street(address.getStreet())
                 .city(address.getCity())
                 .state(address.getState())
-                .customer(address.getCustomer())
-                .build()  ;
+                .build();
     }
 
-    public PaymentMethod paymentMethodDtoToPaymentMethodEntity(PaymentMethodDto paymentMethodDto){
+    public PaymentMethod paymentMethodDtoToPaymentMethodEntity(PaymentMethodDto paymentMethodDto) {
         return PaymentMethod.builder()
                 .type(paymentMethodDto.getType())
                 .number(paymentMethodDto.getNumber())
-                .customer(paymentMethodDto.getCustomer()).
-                build();
+                .build();
     }
 
-    public PaymentMethodDto paymentMethodEntityToPaymentMethodDto(PaymentMethod paymentMethod){
+    public PaymentMethodDto paymentMethodEntityToPaymentMethodDto(PaymentMethod paymentMethod) {
         return PaymentMethodDto.builder()
                 .type(paymentMethod.getType())
                 .number(paymentMethod.getNumber())
-                .customer(paymentMethod.getCustomer())
                 .build();
     }
 

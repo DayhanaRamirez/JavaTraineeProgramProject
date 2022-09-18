@@ -32,6 +32,10 @@ public class Address implements Serializable {
     @NotBlank(message = "State name is required")
     private String state;
 
+    @Column(name = "state")
+    @NotBlank(message = "Country name is required")
+    private String country;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
